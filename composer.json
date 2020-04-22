@@ -1,5 +1,5 @@
 {
-    "name": "yomafleet/payment-gateway",
+    "name": "phyowailinn/payment",
     "description": "This demo package for dynamic payment gateway",
     "license": "MIT",
     "keywords": ["laravel", "payment", "gateway"],
