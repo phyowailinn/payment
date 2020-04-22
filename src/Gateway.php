@@ -1,6 +1,6 @@
 <?php
 
-namespace Yomafleet\Payment;
+namespace Phyowailinn\Payment;
 /**
  * 
  */

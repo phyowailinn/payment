@@ -11,17 +11,17 @@
     ],
     "require": {
         "php": ">=7",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3" 
     },
     "autoload": {
         "psr-4": {
-            "Yomafleet\\Payment\\": "src"
+            "Phyowailinn\\Payment\\": "src"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Yomafleet\\Payment\\PaymentGatewayServiceProvider"
+                "Phyowailinn\\Payment\\PaymentGatewayServiceProvider"
             ]
         }
     },
