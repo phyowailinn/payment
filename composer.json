@@ -1,0 +1,29 @@
+{
+    "name": "yomafleet/payment-gateway",
+    "description": "This demo package for dynamic payment gateway",
+    "license": "MIT",
+    "keywords": ["laravel", "payment", "gateway"],
+    "authors": [
+        {
+            "name": "Phyo Wai Linn",
+            "email": "indepentdent.89@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7",
+        "guzzlehttp/guzzle": "^6.3",
+    },
+    "autoload": {
+        "psr-4": {
+            "Yomafleet\\Payment\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Yomafleet\\Payment\\PaymentGatewayServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
