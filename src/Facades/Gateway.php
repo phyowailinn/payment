@@ -1,9 +1,10 @@
 <?php
-namespace Phyowailinn\Payment;
+namespace Phyowailinn\Payment\Facades;
 
-use Illuminate\Support\Facades\Facade as IlluminateFacade;
+use Illuminate\Support\Facades\Facade;
 
-class Facade extends IlluminateFacade {
+class Gateway extends Facade 
+{
 
     /**
      * Get the registered name of the component.
