@@ -10,6 +10,9 @@ class PaymentGatewayServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
+    protected $defer = false;
+
     public function boot()
     {
         $source = realpath($raw = __DIR__.'/../config/payment.php') ?: $raw;
@@ -26,6 +29,18 @@ class PaymentGatewayServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('payment.gateway', function ($app) {
+            return new Gateway();
+        });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array('payment.gateway');
     }
 }

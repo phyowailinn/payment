@@ -20,4 +20,8 @@ return [
         'basic_auth' => env('MPGS_BASIC_AUTH'),
         'js_url' => env('MPGS_GATEWAY_JS_URL'),
     ],
+    
+    'kbz' => [
+        'url' => env('KBZ_GATEWAY_URL')
+    ],
 ];
