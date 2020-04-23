@@ -2,7 +2,7 @@
 
 namespace Phyowailinn\Payment;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\ClientException;
 
 trait MpgsGateway {
 
@@ -13,9 +13,9 @@ trait MpgsGateway {
 		$this->config = $config;
 	}
 
-	public function verify($info)
-	{
-		$url = "{$this->config['url']}{$this->config['merchant_id']}/order/{$info['order_id']}/transaction/{$info['transaction_id']}";
+	public function verify($data)
+	{	
+		$url = "{$this->config['url']}{$this->config['merchant_id']}/order/{$data['order_id']}/transaction/{$data['transaction_id']}";
         $method = 'PUT';
         
         $data = [
@@ -24,21 +24,18 @@ trait MpgsGateway {
 		        'currency' => 'MMK',
 	        ],
 	        'session' => [
-	        	'id' =>$info['session_id'],
+	        	'id' =>$data['session_id'],
         	],
         ];
 
-        $response = $this->request_api($url, $method, $data);
-        
-        return $response;
-	}
+        $verify = $this->request_api($url, $method, $data);
 
-	public function send($data)
-	{
-		$verify = $this->verify($data);
-	
-		if ($verify->result !== 'SUCCESS') {
-			return ['success' => false, 'message' => 'Your card issuer bank has declined. Please contact your bank for support.'];
+        if ($verify->result !== 'SUCCESS') {
+			return [
+				'success' => false, 
+				'message' => 'Your card issuer bank has declined. Please contact your bank for support.',
+				'error_message' => "{$verify->error->explanation} - {$verify->error->cause}"
+			];
 		}
 
 		$result = $this->getToken($data['session_id']);
@@ -68,13 +65,20 @@ trait MpgsGateway {
         if ($response->result === 'SUCCESS' && $response->status === 'VALID') return $response;
 	}
 
-	public function deleteToken($token)
+	public function delete($token)
 	{
 		$url = "{$this->config['url']}{$this->config['merchant_id']}/token/{$token}";
         $method = 'DELETE';
         $response = $this->request_api($url, $method);
-        
-        if ($response->result === 'SUCCESS') return $response->result;
+
+        $result['success'] = true;
+        if ($response->result !== 'SUCCESS'){
+        	$result['success'] = false;
+        	$result['message'] = 'Your card can`t delete!';
+        	$result['error_message'] = "{$response->error->explanation} - {$response->error->cause}";
+        } 
+
+        return $result;
 	}
 
 	private function request_api($url,$method,$data=[])

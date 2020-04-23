@@ -7,22 +7,18 @@ use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 class Gateway
 {
-	use MpgsGateway;
+    use MpgsGateway;
 
-    public function request($data)
+    public function request()
     {
-    	$default = config('payment.default');
-    	$this->setConfig(config('payment.'.$default));
-    	$this->send($data);
+        $default = config('payment.default');
+        $this->setConfig(config('payment.'.$default));
+        
+        return $this;
     }
-
-    public function delete($token)
-    {
-    	$this->deleteToken($token);
-    }
-
+    
     protected function mpgs()
     {
-    	return method_exists($this, 'verify') ? true : false;
+        return method_exists($this, 'verify') ? true : false;
     }
 }
