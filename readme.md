@@ -19,10 +19,10 @@ You can optionally use the facade for shorter code. Add this to your facades:
 ## Using
 
 Use the facade:
-	use hyowailinn\Payment\Facades\Gateway;
+	use Phyowailinn\Payment\Facades\Gateway;
 
-    $result = Gateway::request($data);
-    return $result->verify();
+    $result = Gateway::request();
+    return $result->verify($data);
 
 Use `php artisan vendor:publish` to create a config file located at `config/payment.php` which will allow you to define local configurations to change some settings (default paper etc).
 You can also use your ConfigProvider to set certain keys.
