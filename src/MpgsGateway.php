@@ -13,9 +13,9 @@ trait MpgsGateway {
 		$this->config = $config;
 	}
 
-	public function verify($data)
+	public function verify($attributes)
 	{	
-		$url = "{$this->config['url']}{$this->config['merchant_id']}/order/{$data['order_id']}/transaction/{$data['transaction_id']}";
+		$url = "{$this->config['url']}{$this->config['merchant_id']}/order/{$attributes['order_id']}/transaction/{$attributes['transaction_id']}";
         $method = 'PUT';
         
         $data = [
@@ -24,12 +24,12 @@ trait MpgsGateway {
 		        'currency' => 'MMK',
 	        ],
 	        'session' => [
-	        	'id' =>$data['session_id'],
+	        	'id' =>$attributes['session_id'],
         	],
         ];
 
         $verify = $this->request_api($url, $method, $data);
-
+        
         if ($verify->result !== 'SUCCESS') {
 			return [
 				'success' => false, 
@@ -38,7 +38,7 @@ trait MpgsGateway {
 			];
 		}
 
-		$result = $this->getToken($data['session_id']);
+		$result = $this->getToken($attributes['session_id']);
 
 		if ($result) {
 			return ['success' => true, 'data' => $result];
@@ -61,7 +61,7 @@ trait MpgsGateway {
         ];
 
         $response = $this->request_api($url, $method, $data);
-
+       
         if ($response->result === 'SUCCESS' && $response->status === 'VALID') return $response;
 	}
 
@@ -86,7 +86,7 @@ trait MpgsGateway {
 		$data = json_encode($data);
 		$client = new Client;   
 		$header = [
-			'Authorization' => 'Basic ' . $this->config['basic_auth'],
+			'Authorization' => 'Basic ' . base64_encode($this->config['basic_auth']),
 			'Content-Type' => 'Application/json;charset=UTF-8',
         	'Content-Length' => strlen($data),
 		];
