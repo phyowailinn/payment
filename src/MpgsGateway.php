@@ -18,25 +18,25 @@ trait MpgsGateway {
 		$url = "{$this->config['url']}{$this->config['merchant_id']}/order/{$attributes['order_id']}/transaction/{$attributes['transaction_id']}";
         $method = 'PUT';
         
-        $data = [
-	        'apiOperation' => 'VERIFY',
-	        'order' => [
-		        'currency' => 'MMK',
-	        ],
-	        'session' => [
-	        	'id' =>$attributes['session_id'],
-        	],
-        ];
+        // $data = [
+	       //  'apiOperation' => 'VERIFY',
+	       //  'order' => [
+		      //   'currency' => 'MMK',
+	       //  ],
+	       //  'session' => [
+	       //  	'id' =>$attributes['session_id'],
+        // 	],
+        // ];
 
-        $verify = $this->request_api($url, $method, $data);
+        //$verify = $this->request_api($url, $method, $data);
         
-        if ($verify->result !== 'SUCCESS') {
-			return [
-				'success' => false, 
-				'message' => 'Your card issuer bank has declined. Please contact your bank for support.',
-				'error_message' => [$verify->error->cause => [$verify->error->explanation]]
-			];
-		}
+  //       if ($verify->result !== 'SUCCESS') {
+		// 	return [
+		// 		'success' => false, 
+		// 		'message' => 'Your card issuer bank has declined. Please contact your bank for support.',
+		// 		'error_message' => [$verify->error->cause => [$verify->error->explanation]]
+		// 	];
+		// }
 
 		$result = $this->getToken($attributes['session_id']);
 
@@ -79,6 +79,63 @@ trait MpgsGateway {
         } 
 
         return $result;
+	}
+
+	public function authorize($info,$token)
+	{
+		$url = "{$this->config['url']}{$this->config['merchant_id']}/order/{$info['order_id']}/transaction/{$info['transaction_id']}";
+
+        $method = 'PUT';
+        $data = [
+            'apiOperation' => 'AUTHORIZE',
+            'order' => [
+                'currency' => 'MMK',
+                'amount' => 1000
+            ],
+            'sourceOfFunds' => [
+                'token' => $token,
+                'provided' => [
+                	'card' => [ 
+                		'storedOnFile' => 'TO_BE_STORED'
+                	]
+                ]
+            ],
+            'transaction' => [
+            	'source' => 'INTERNET'
+            ],
+            'agreement' => [
+            	'type' => 'RECURRING',
+            	'id' => $info['order_id']
+            ]
+        ];
+        
+        return $this->request_api($url, $method, $data);
+	}
+
+	public function agreement($info,$token)
+	{
+		$url = "{$this->config['url']}{$this->config['merchant_id']}/order/{$info['order_id']}/transaction/{$info['transaction_id']}";
+
+        $method = 'PUT';
+        $data = [
+            'apiOperation' => 'AUTHORIZE',
+            'order' => [
+                'currency' => 'MMK',
+            ],
+            'sourceOfFunds' => [
+                'token' => $token,
+                'provided' => [
+                	'card' => [ 
+                		'storedOnFile' => 'TO_BE_STORED'
+                	]
+                ]
+            ],
+            'transaction' => [
+            	'source' => 'INTERNET'
+            ],
+        ];
+      
+        return $this->request_api($url, $method, $data);
 	}
 
 	private function request_api($url,$method,$data=[])
