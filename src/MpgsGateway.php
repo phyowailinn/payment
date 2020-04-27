@@ -108,8 +108,8 @@ trait MpgsGateway {
             	'id' => $info['order_id']
             ]
         ];
-        
-        return $this->request_api($url, $method, $data);
+        return true;
+        //return $this->request_api($url, $method, $data);
 	}
 
 	public function agreement($info,$token)
