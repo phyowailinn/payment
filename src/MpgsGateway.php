@@ -18,28 +18,28 @@ trait MpgsGateway {
         $url = "{$this->config['url']}{$this->config['merchant_id']}/order/{$attributes['order_id']}/transaction/{$attributes['transaction_id']}";
         $method = 'PUT';
         
-        // $data = [
-           //  'apiOperation' => 'VERIFY',
-           //  'order' => [
-              //   'currency' => 'MMK',
-           //  ],
-           //  'session' => [
-           //   'id' =>$attributes['session_id'],
-        //  ],
-        // ];
+        $data = [
+            'apiOperation' => 'VERIFY',
+            'order' => [
+                'currency' => 'MMK',
+            ],
+            'session' => [
+             'id' =>$attributes['session_id'],
+         ],
+        ];
 
-        //$verify = $this->request_api($url, $method, $data);
+        $verify = $this->request_api($url, $method, $data);
         
-  //       if ($verify->result !== 'SUCCESS') {
-        //  return [
-        //      'success' => false, 
-        //      'message' => 'Your card issuer bank has declined. Please contact your bank for support.',
-        //      'error_message' => [$verify->error->cause => [$verify->error->explanation]]
-        //  ];
-        // }
+        if ($verify->result !== 'SUCCESS') {
+         return [
+             'success' => false, 
+             'message' => 'Your card issuer bank has declined. Please contact your bank for support.',
+             'error_message' => [$verify->error->cause => [$verify->error->explanation]]
+         ];
+        }
 
         $result = $this->getToken($attributes['session_id']);
-
+        
         if ($result) {
             return ['success' => true, 'data' => $result];
         }
