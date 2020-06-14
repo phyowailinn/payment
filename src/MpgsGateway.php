@@ -34,7 +34,7 @@ trait MpgsGateway {
          return [
              'success' => false, 
              'message' => 'Your card issuer bank has declined. Please contact your bank for support.',
-             'error_message' => [$verify->error->cause => [$verify->error->explanation]]
+             //'error_message' => [$verify->error->cause => [$verify->error->explanation]]
          ];
         }
 
@@ -75,7 +75,7 @@ trait MpgsGateway {
         if ($response->result !== 'SUCCESS'){
             $result['success'] = false;
             $result['message'] = 'Your card can`t delete!';
-            $result['error_message'] = [$verify->error->cause => [$verify->error->explanation]];
+            //$result['error_message'] = [$verify->error->cause => [$verify->error->explanation]];
         } 
 
         return $result;
