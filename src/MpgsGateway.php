@@ -144,7 +144,7 @@ trait MpgsGateway {
         return $this->request_api($url, $method, $data);
     }
 
-    public function capture()
+    public function capture($info)
     {
         $url = "{$this->config['url']}{$this->config['merchant_id']}/order/{$info['order_id']}/transaction/{$info['transaction_id']}";
 
